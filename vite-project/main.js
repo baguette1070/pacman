@@ -1,7 +1,7 @@
 import {Engine, Render, Runner, World, Bodies, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
 import {Coins, } from "./public/coins.js"
-import {CheckCollision} from "./public/checkColiision.js"
+
 
 const engine = Engine.create();
 const world = engine.world;
@@ -42,20 +42,24 @@ const map = [
 ];
 
 const cellSize = 30;
-let wall;
+const tabWall = []
+
+
 function drawMap(){
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[i].length; j++) {
             if (map[i][j] === 1) {
                 const x = j * cellSize + cellSize / 2;
                 const y = i * cellSize + cellSize / 2;
-                wall = Bodies.rectangle(x, y, cellSize, cellSize, {
+                const wall = Bodies.rectangle(x, y, cellSize, cellSize, {
                     isStatic: true,
+                    label:'wall',
                     render:{
                         fillStyle:"#2d4e75"
                     }
                 });
                 World.add(world, wall);
+                tabWall.push(wall)
             }
             if(map[i][j] === 2){
                 const x = j * cellSize + cellSize / 2;
@@ -72,12 +76,25 @@ function drawMap(){
         }
     }
 }
-console.log(wall)
+
 drawMap()
 
-let pacman = new Pacman(45, 45, 18, 18, 30)
+const pacman = new Pacman(45, 45, 18, 18, 30, {
+    label:'pacmanBox'
+})
+
 pacman.movePacman()
 
+
+Events.on(engine, 'collisionStart', (event) => {
+    event.pairs.forEach((collision) => {
+        const { bodyA, bodyB } = collision;
+        if ((bodyA.label === "pacmanBox" && bodyB.label === "wall") ||
+            (bodyA.label === 'wall' && bodyB.label === 'pacmanBox')) {
+            console.log("Pacman a touché un mur !");
+        }
+    });
+});
 
 
 World.add(world, [pacman.player])

@@ -1,4 +1,4 @@
-import {Bodies, World} from "matter-js";
+/*import {Bodies, World} from "matter-js";
 import {Coins} from "./coins.js";
 
 export class Map {
@@ -66,4 +66,4 @@ export class Map {
             }
         }
     }
-}
+}*/

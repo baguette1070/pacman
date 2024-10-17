@@ -1,4 +1,4 @@
-import {Body, Events} from "matter-js";
+/*import {Body, Events} from "matter-js";
 
 export class CheckCollision {
 
@@ -16,4 +16,4 @@ export class CheckCollision {
 
 
 
-}
+}*/

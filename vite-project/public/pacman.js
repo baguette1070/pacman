@@ -43,7 +43,7 @@ export class Pacman {
                     this.positionYPacman += this.speed
                     break
             }
-            console.log(`{ x : ${this.positionXPacman}, y : ${this.positionYPacman}}`)
+
         })
     }
 
