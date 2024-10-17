@@ -66,9 +66,17 @@ function drawMap(){
         }
     }
 }
+/*const b = Bodies.rectangle(50, 50, 50, 50, {
+    render:{
+        fillStyle:"red",
+        sprite:{
+            texture
+        }
+    }
+})*/
 drawMap()
-let pacman = new Pacman(100, 100, 152, 150, 5)
-World.add(world, pacman.body)
+let pacman = new Pacman(100, 178, 0.02, 0.02, 5)
+World.add(world, [pacman.body])
 Render.run(render);
 Runner.run(Runner.create(), engine);
 

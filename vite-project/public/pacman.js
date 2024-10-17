@@ -1,6 +1,5 @@
 import { Engine, Bodies, World } from 'matter-js';
 
-
 export class Pacman {
 
     constructor(x, y, width, height, speed) {
@@ -12,9 +11,10 @@ export class Pacman {
         this.body = Bodies.rectangle(this.x, this.y, this.width, this.height, {
             render:{
                 sprite:{
-                    texture: "/birdPlayer.webp", // Image path
-                    xScale: 0.1, // Scale the sprite down or up
-                    yScale: 0.1
+                    texture: "/pacman.png",
+                    xScale: this.width,
+                    yScale: this.height,
+                    wireframes: false
                 }
             }
         })
