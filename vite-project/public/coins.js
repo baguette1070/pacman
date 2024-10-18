@@ -11,12 +11,16 @@ export class Coins {
 
         this.coins = Bodies.circle(this.positionXCoin, this.positionYCoins, this.width,{
             isStatic:true,
+            label:"coins",
             render:{
-                sprite:{
+                strokeStyle:"black",
+                lineWidth:3,
+                fillStyle:"yellow",
+                /*sprite:{
                     texture:"../assets/coin_no_background.png",
                     xScale: this.width / 1200,
                     yScale: this.height / 1200,
-                }
+                }*/
             }
         })
     }
