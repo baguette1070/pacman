@@ -2,7 +2,7 @@ import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter
 import {Pacman, } from "./public/pacman.js";
 import {Coins, } from "./public/coins.js"
 
-let pacman = new Pacman(60, 45, 14);
+let pacman = new Pacman(60, 45, 10);
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;

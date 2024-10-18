@@ -11,7 +11,7 @@ export class Pacman {
         this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
             label:"pacmanBox",
             isStatic:false,
-            restitution: 0,
+            frictionAir: 0.08,
             render:{
                 fillStyle   :"yellow",
                 strokeStyle:"black",
