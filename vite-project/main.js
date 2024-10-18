@@ -1,15 +1,13 @@
-import {Engine, Render, Runner, World, Bodies, Events} from "matter-js";
+import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
 import {Coins, } from "./public/coins.js"
-import {CheckCollision} from "./public/checkColiision.js";
 
-let pacman = new Pacman(60, 45, 10, 18, 1, {
-    label: "pacmanBox"
-});
-let col = new CheckCollision()
+let pacman = new Pacman(60, 45, 14);
 
 const engine = Engine.create();
-engine.gravity.y = 0
+engine.world.gravity.y = 0;
+engine.world.gravity.x = 0;
+
 const world = engine.world;
 const render = Render.create({
     engine: engine,
@@ -17,10 +15,11 @@ const render = Render.create({
     options: {
         wireframes: false,
         width: 840,
-        background: "white",
+        background: "#3295a8",
         height: 920
     },
 });
+Render.run(render);
 const map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 9, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -48,7 +47,6 @@ const map = [
 ];
 const cellSize = 30;
 const tabCoins = []; // Pour stocker toutes les pièces
-const tabWall = [];
 
 function drawMap() {
     for (let i = 0; i < map.length; i++) {
@@ -64,43 +62,21 @@ function drawMap() {
                     }
                 });
                 World.add(world, wall);
-                tabWall.push(wall)
-            }
-            if (map[i][j] === 2) {
-                const coins = new Coins(x, y, 5, 10, {
-                    label: "coins"
-                });
-                const bg_sol = Bodies.rectangle(x, y, cellSize, cellSize, {
-                    label: "sol",
-                    render: {
-                        fillStyle: "#3295a8"
-                    },
-                    isStatic: true
-                });
-                World.add(world, [bg_sol, coins.coins]);
-                tabCoins.push(coins); // Ajouter les pièces à la liste
-            }
-            if (map[i][j] === 9) {
-                const bg_sol = Bodies.rectangle(x, y, cellSize, cellSize, {
-                    label: "sol",
-                    render: {
-                        fillStyle: "#3295a8"
-                    },
-                    isStatic: true
-                });
-                World.add(world, bg_sol);
             }
         }
     }
 }
 
 drawMap();
-pacman.movePacman(engine, tabWall);
-col.checkCollisionPiece(engine, tabCoins, world)
-col.checkCollisionWall(engine, tabWall, world, pacman)
-
+pacman.movePacman();
+Events.on(engine, 'collisionStart', (event) => {
+    event.pairs.forEach((collision) => {
+        console.log(collision)
+    })
+});
 World.add(world, [pacman.player]);
 Render.run(render);
 Runner.run(Runner.create(), engine);
+
 
 

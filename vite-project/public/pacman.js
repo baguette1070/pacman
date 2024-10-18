@@ -3,60 +3,35 @@ import {CheckCollision} from "./checkColiision.js";
 
 export class Pacman {
 
-    constructor(positionXPacman, positionYPacman, width, height, speed) {
+    constructor(positionXPacman, positionYPacman, radius) {
         this.positionXPacman = positionXPacman
         this.positionYPacman = positionYPacman
-        this.width = width
-        this.height = height
-        this.speed = speed
+        this.radius = radius
 
-        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.width, {
+        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
             label:"pacmanBox",
             isStatic:false,
             restitution: 0,
             render:{
                 fillStyle   :"yellow",
                 strokeStyle:"black",
-
-            }
+            },
         })
     }
 
 
-    movePacman(engine, tabWall) {
-        let interval = null;
-        const col = new CheckCollision();
-        console.log(col.checkCollisionWall(engine, tabWall, this.player))
-
-        window.onkeydown = (event) => {
-            if (interval) return;  // Prevent multiple intervals from being created.
-
-            interval = setInterval(() => {
-                let nextPosition = { x: this.positionXPacman, y: this.positionYPacman };
-                switch (event.key && !col.checkCollisionWall(engine, tabWall, this.player)) {
-                    case 'd':
-                        nextPosition.x += this.speed;
-                        break;
-                    case 'q':
-                        nextPosition.x -= this.speed;
-                        break;
-                    case 'z':
-                        nextPosition.y -= this.speed;
-                        break;
-                    case 's':
-                        nextPosition.y += this.speed;
-                        break;
-                }
-
-                Body.setPosition(this.player, nextPosition);
-                    this.positionXPacman = nextPosition.x;
-                    this.positionYPacman = nextPosition.y;
-            }, 5);
-        };
-
-        window.onkeyup = () => {
-            clearInterval(interval);
-            interval = null;
-        };
+    movePacman() {
+        document.addEventListener('keydown', (event) => {
+            const velocity = 3;
+            if (event.key === 'z') {
+                Body.setVelocity(this.player, { x: this.player.velocity.x, y: -velocity });
+            } else if (event.key === 's') {
+                Body.setVelocity(this.player, { x: this.player.velocity.x, y: velocity });
+            } else if (event.key === 'q') {
+                Body.setVelocity(this.player, { x: -velocity, y: this.player.velocity.y });
+            } else if (event.key === 'd') {
+                Body.setVelocity(this.player, { x: velocity, y: this.player.velocity.y });
+            }
+        });
     }
 }
