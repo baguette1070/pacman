@@ -72,6 +72,11 @@ function drawMap() {
                 });
                 const bg_sol = Bodies.rectangle(x, y, cellSize, cellSize, {
                     label: "sol",
+                    collisionFilter:{
+                        'group': -1,
+                        'category': 2,
+                        'mask': 0,
+                    },
                     render: {
                         fillStyle: "#3295a8"
                     },

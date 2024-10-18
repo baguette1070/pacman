@@ -33,7 +33,7 @@ export class Pacman {
 
             interval = setInterval(() => {
                 let nextPosition = { x: this.positionXPacman, y: this.positionYPacman };
-                switch (event.key && !col.checkCollisionWall(engine, tabWall, this.player)) {
+                switch (event.key) {
                     case 'd':
                         nextPosition.x += this.speed;
                         break;

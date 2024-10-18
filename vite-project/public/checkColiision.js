@@ -34,6 +34,5 @@ export class CheckCollision {
         });
         return collisionDetected;
     }
-x
 
 }
