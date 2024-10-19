@@ -1,5 +1,4 @@
 import { Engine, Bodies, World, Body } from 'matter-js';
-import {CheckCollision} from "./checkColiision.js";
 
 export class Pacman {
 
@@ -8,29 +7,59 @@ export class Pacman {
         this.positionYPacman = positionYPacman
         this.radius = radius
 
-        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
+        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, 11, {
             label:"pacmanBox",
             isStatic:false,
-            restitution: 0,
+            frictionAir: 0,
+            friction:0,
+            inertia: Infinity,
             render:{
                 fillStyle   :"yellow",
-                strokeStyle:"black",
             },
         })
     }
 
 
+    forward(){
+        const velocity = 5;
+        Body.setVelocity(this.player, {x: velocity, y: this.player.velocity.y})
+    }
+
+    moveDown(){
+        const velocity = 5;
+        Body.setVelocity(this.player, {x: this.player.velocity.x, y: velocity})
+    }
+
+    moveUp(){
+        const velocity = 5;
+        Body.setVelocity(this.player, {x: this.player.velocity.x, y: -velocity})
+
+    }
+
+    back(){
+        const velocity = 5;
+        Body.setVelocity(this.player, {x: - velocity, y: this.player.velocity.y})
+
+    }
+
     movePacman() {
         document.addEventListener('keydown', (event) => {
-            const velocity = 3;
-            if (event.key === 'z') {
-                Body.setVelocity(this.player, { x: this.player.velocity.x, y: -velocity });
-            } else if (event.key === 's') {
-                Body.setVelocity(this.player, { x: this.player.velocity.x, y: velocity });
-            } else if (event.key === 'q') {
-                Body.setVelocity(this.player, { x: -velocity, y: this.player.velocity.y });
-            } else if (event.key === 'd') {
-                Body.setVelocity(this.player, { x: velocity, y: this.player.velocity.y });
+            switch (event.key){
+                case 'p':
+                    break
+                case 'z':
+                    this.moveUp()
+                    break
+                case 's':
+                    this.moveDown()
+                    break
+                case 'q':
+                    this.back()
+                    break
+                case 'd':
+                    this.forward()
+                    break
+
             }
         });
     }

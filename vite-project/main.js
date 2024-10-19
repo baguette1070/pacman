@@ -1,8 +1,7 @@
 import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
-import {Coins, } from "./public/coins.js"
 
-let pacman = new Pacman(60, 45, 14);
+let pacman = new Pacman(165, 135    , 15);
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -19,7 +18,7 @@ const render = Render.create({
         height: 920
     },
 });
-Render.run(render);
+
 const map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 9, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -31,22 +30,24 @@ const map = [
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-    [1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1],
+    [1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+
 ];
 const cellSize = 30;
-const tabCoins = []; // Pour stocker toutes les pièces
+const tabWall = [];
+
 
 function drawMap() {
     for (let i = 0; i < map.length; i++) {
@@ -59,21 +60,40 @@ function drawMap() {
                     label: 'wall',
                     render: {
                         fillStyle: "#2d4e75"
-                    }
+                    },
+                    friction:0,
                 });
                 World.add(world, wall);
+                tabWall.push(wall)
             }
         }
     }
 }
 
 drawMap();
+
 pacman.movePacman();
+
+
+tabWall.forEach((wall) => {
+    console.log(wall.height)
+    if(pacman.player.position.y - pacman.radius + pacman.player.velocity.y <= wall.position.y + 30 &&
+        pacman.player.position.x  + pacman.radius  + pacman.player.velocity.x >= wall.position.x &&
+        pacman.player.position.y + pacman.radius  + pacman.player.velocity.y >= wall.position.y &&
+        pacman.player.position.x - pacman.radius + pacman.player.velocity.x <= wall.position.x + 30
+    ){
+        pacman.player.velocity.x = 0
+        pacman.player.velocity.y = 0
+        console.log("colision")
+    }
+})
 Events.on(engine, 'collisionStart', (event) => {
     event.pairs.forEach((collision) => {
-        console.log(collision)
+
     })
 });
+
+
 World.add(world, [pacman.player]);
 Render.run(render);
 Runner.run(Runner.create(), engine);
