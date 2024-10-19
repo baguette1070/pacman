@@ -1,7 +1,7 @@
 import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
 
-let pacman = new Pacman(165, 135    , 15);
+let pacman = new Pacman(165, 135    , 10);
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -72,25 +72,13 @@ function drawMap() {
 
 drawMap();
 
-pacman.movePacman();
+pacman.movePacman(map);
 
+Events.on(engine, 'beforeUpdate', () => {
+    setInterval(() => {
+        pacman.checkCollision(tabWall, map);
 
-tabWall.forEach((wall) => {
-    console.log(wall.height)
-    if(pacman.player.position.y - pacman.radius + pacman.player.velocity.y <= wall.position.y + 30 &&
-        pacman.player.position.x  + pacman.radius  + pacman.player.velocity.x >= wall.position.x &&
-        pacman.player.position.y + pacman.radius  + pacman.player.velocity.y >= wall.position.y &&
-        pacman.player.position.x - pacman.radius + pacman.player.velocity.x <= wall.position.x + 30
-    ){
-        pacman.player.velocity.x = 0
-        pacman.player.velocity.y = 0
-        console.log("colision")
-    }
-})
-Events.on(engine, 'collisionStart', (event) => {
-    event.pairs.forEach((collision) => {
-
-    })
+    }, 1000)
 });
 
 
