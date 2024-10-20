@@ -6,8 +6,7 @@ export class Pacman {
         this.positionYPacman = positionYPacman;
         this.radius = radius;
 
-        // Création du corps du Pacman
-        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, radius, {
+        this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
             label: "pacmanBox",
             isStatic: false,
             frictionAir: 0,
@@ -40,51 +39,88 @@ export class Pacman {
         Body.setVelocity(this.player, { x: -velocity, y: this.player.velocity.y });
     }
 
-    // Méthode pour détecter les collisions et s'arrêter avant le mur
-    checkCollision(tabWall, map) {
-        const cellSize = 30;
-        const buffer = 5; // Distance avant le mur pour arrêter Pacman
-        let getMapY = parseInt((this.player.position.y / cellSize) + 1)
-        let getMapX = parseInt((this.player.position.x / cellSize) + 1)
-
-        //console.log(getMapX)
-        //console.log(getMapY)
-
-        tabWall.forEach((wall) => {
-            const pacmanX = this.player.position.x;
-            const pacmanY = this.player.position.y;
-            const wallX = map[getMapX][getMapY];
-            const wallY = getMapY;
-
-
-
-        });
+    getNextObjectRight(map, cellSize){
+        return map[parseInt((this.player.position.y / cellSize))][parseInt((this.player.position.x / cellSize) + 1)]
     }
 
-    // Méthode pour gérer les touches de direction
+    getNextObjectDown(map ,cellSize){
+        return map[parseInt((this.player.position.y / cellSize) + 1)][parseInt((this.player.position.x / cellSize))]
+    }
+
+    getBeforeObjectUp(map, cellSize){
+        return map[parseInt((this.player.position.y / cellSize) - 1)][parseInt((this.player.position.x / cellSize))]
+    }
+
+    getBeforeObjectLeft(map, cellSize){
+        return map[parseInt((this.player.position.y / cellSize))][parseInt((this.player.position.x / cellSize) - 1)]
+
+    }
+
     movePacman(map) {
         document.addEventListener('keydown', (event) => {
             const cellSize = 30;
-            let a = map[parseInt((this.player.position.y / cellSize) + 1)][parseInt((this.player.position.x / cellSize) + 1)]
+
             switch (event.key) {
                 case 'p':
-                    console.log(a)
-                    console.log(parseInt((this.player.position.y / cellSize) + 1))
-                    console.log(parseInt((this.player.position.x / cellSize) + 1))
                     break
                 case 'z':
-                    this.moveUp();
+                    if(this.getBeforeObjectUp(map, cellSize) === 1){
+                        Body.setVelocity(this.player, {x:0, y:0})
+                        console.log(this.player.velocity)
+                    } else {
+                        console.log("Haut")
+                        this.moveUp();
+                    }
                     break;
                 case 's':
-                    this.moveDown();
+                    if(this.getNextObjectDown(map, cellSize) === 1 ) {
+                        Body.setVelocity(this.player, {x:0, y:0})
+                        console.log(this.player.velocity)
+                    } else {
+                        console.log("Bas")
+                        this.moveDown();
+                    }
                     break;
                 case 'q':
-                    this.back();
+                    if(this.getBeforeObjectLeft(map, cellSize) === 1){
+                        Body.setVelocity(this.player, {x:0, y:0})
+                        console.log(this.player.velocity)
+                    } else {
+                        console.log("Gauche")
+                        this.back()
+                    }
                     break;
                 case 'd':
-                    this.forward();
+                    if(this.getNextObjectRight(map, cellSize) === 1) {
+                        Body.setVelocity(this.player, {x:0, y:0})
+                        console.log(this.player.velocity)
+                    }else{
+                        console.log("Droite")
+                        this.forward();
+                    }
                     break;
             }
         });
+
+        document.addEventListener('keyup', (event) => {
+            const cellSize = 30;
+            switch (event.key) {
+                case 'p':
+                    break
+                case 'z':
+                    Body.setVelocity(this.player, {x:0, y:0})
+                    break;
+                case 's':
+                    Body.setVelocity(this.player, {x:0, y:0})
+                    break;
+                case 'q':
+                    Body.setVelocity(this.player, {x:0, y:0})
+                    break;
+                case 'd':
+                    Body.setVelocity(this.player, {x:0, y:0})
+                    break;
+            }
+        });
+
     }
 }

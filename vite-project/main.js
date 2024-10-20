@@ -1,7 +1,7 @@
 import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
 
-let pacman = new Pacman(165, 135    , 10);
+let pacman = new Pacman(45, 195    , 10);
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -59,6 +59,8 @@ function drawMap() {
                     isStatic: true,
                     label: 'wall',
                     render: {
+                        strokeStyle: "red",
+                        lineWidth: 20,
                         fillStyle: "#2d4e75"
                     },
                     friction:0,
@@ -74,13 +76,9 @@ drawMap();
 
 pacman.movePacman(map);
 
-Events.on(engine, 'beforeUpdate', () => {
-    setInterval(() => {
-        pacman.checkCollision(tabWall, map);
-
-    }, 1000)
-});
-
+Events.on(engine, 'collisionStart', (event) => {
+    console.log(event.pairs)
+})
 
 World.add(world, [pacman.player]);
 Render.run(render);
