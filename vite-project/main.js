@@ -60,7 +60,7 @@ function drawMap() {
                     label: 'wall',
                     render: {
                         strokeStyle: "red",
-                        lineWidth: 20,
+                        lineWidth: 2,
                         fillStyle: "#2d4e75"
                     },
                     friction:0,
@@ -76,9 +76,6 @@ drawMap();
 
 pacman.movePacman(map);
 
-Events.on(engine, 'collisionStart', (event) => {
-    console.log(event.pairs)
-})
 
 World.add(world, [pacman.player]);
 Render.run(render);
