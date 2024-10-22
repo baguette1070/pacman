@@ -1,6 +1,7 @@
 import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
 import {Coins} from "./public/coins.js";
+import {Ghost} from "./public/ghost.js";
 
 let pacman = new Pacman(45, 45    , 15);
 
@@ -14,9 +15,9 @@ const render = Render.create({
     element: document.body,
     options: {
         wireframes: false,
-        width: 840,
+        width: 630,
         background: "#3295a8",
-        height: 920
+        height: 690
     },
 });
 
@@ -78,8 +79,8 @@ function drawMap() {
 drawMap();
 
 pacman.movePacman(map);
-let a = pacman.checkCollisionPlayerCoins(engine, world, tabCoins)
-console.log(a)
+pacman.checkCollisionPlayerCoins(engine, world, tabCoins)
+
 
 World.add(world, [pacman.player]);
 Render.run(render);

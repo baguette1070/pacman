@@ -7,6 +7,7 @@ export class Pacman {
         this.radius = radius;
 
 
+        this.compteurPiece = 1
         this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
             label: "pacmanBox",
             isStatic: false,
@@ -41,19 +42,23 @@ export class Pacman {
     }
 
     checkCollisionPlayerCoins(engine, world, tabCoins) {
-        let compteur = 0;
         Events.on(engine, "collisionStart", (event) => {
             event.pairs.forEach((collision) => {
                 const { bodyA, bodyB } = collision;
-
                 if ((bodyA.label === 'pacmanBox' && bodyB.label === 'coins') ||
                     (bodyA.label === 'coins' && bodyB.label === 'pacmanBox')) {
-                    const sound = new Audio("./sounds/tir.ogg")
-                    const coinBody = bodyA.label === 'coins' ? bodyA : bodyB;
+                    const canvas = document.getElementById("gameCanvas")
+                    const ctx = canvas.getContext("2d")
 
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas
+                    ctx.font = "20px Arial"; // Définir la police et la taille du texte
+                    ctx.fillStyle = "black"; // Couleur du texte
+                    ctx.fillText("Score: " + this.getCoinsCollected(), 20, 30); // Texte, position X, position Y
+
+                    const coinBody = bodyA.label === 'coins' ? bodyA : bodyB;
                     World.remove(world, coinBody);
-                    compteur++;
-                    console.log(compteur)
+                    this.compteurPiece++
+                    console.log(this.compteurPiece)
                     const coinIndex = tabCoins.indexOf(coinBody);
                     if (coinIndex !== -1) {
                         tabCoins.splice(coinIndex, 1);
@@ -67,6 +72,8 @@ export class Pacman {
         document.addEventListener('keydown', (event) => {
             switch (event.key) {
                 case 'p':
+                    let getCoins = this.getCoinsCollected()
+                    console.log(getCoins)
                     break;
                 case 'z':
                     this.moveUp();
@@ -88,6 +95,9 @@ export class Pacman {
         });
     }
 
+    getCoinsCollected(){
+        return this.compteurPiece
+    }
 
 
 

@@ -1,0 +1,15 @@
+canvas{
+    display: flex;
+    justify-content: center;
+
+}
+*{
+    padding: 0;
+}
+div{
+    display: flex;
+    align-items: center;
+    width: 40%;
+    justify-content: center;
+    height: 100px;
+}
