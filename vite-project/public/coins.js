@@ -2,25 +2,19 @@ import {Bodies} from "matter-js";
 
 export class Coins {
 
-    constructor(positionXCoin, positionYCoins, width, height, value) {
-        this.positionXCoin = positionXCoin
-        this.positionYCoins = positionYCoins
-        this.value = value
-        this.width = width
-        this.height = height
+    constructor(posX, posY) {
 
-        this.coins = Bodies.circle(this.positionXCoin, this.positionYCoins, this.width,{
+        this.posX = posX
+        this.posY = posY
+
+        this.coins = Bodies.circle(this.posX, this.posY, 7, {
             isStatic:true,
             label:"coins",
+            isSensor: true,
             render:{
                 strokeStyle:"black",
                 lineWidth:3,
                 fillStyle:"yellow",
-                /*sprite:{
-                    texture:"../assets/coin_no_background.png",
-                    xScale: this.width / 1200,
-                    yScale: this.height / 1200,
-                }*/
             }
         })
     }

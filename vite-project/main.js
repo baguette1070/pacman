@@ -1,7 +1,8 @@
 import {Engine, Render, Runner, World, Bodies, Event, Body, Events} from "matter-js";
 import {Pacman, } from "./public/pacman.js";
+import {Coins} from "./public/coins.js";
 
-let pacman = new Pacman(45, 195    , 10);
+let pacman = new Pacman(45, 45    , 15);
 
 const engine = Engine.create();
 engine.world.gravity.y = 0;
@@ -18,6 +19,8 @@ const render = Render.create({
         height: 920
     },
 });
+
+const tabCoins = []
 
 const map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -46,8 +49,6 @@ const map = [
 
 ];
 const cellSize = 30;
-const tabWall = [];
-
 
 function drawMap() {
     for (let i = 0; i < map.length; i++) {
@@ -59,14 +60,16 @@ function drawMap() {
                     isStatic: true,
                     label: 'wall',
                     render: {
-                        strokeStyle: "red",
-                        lineWidth: 2,
                         fillStyle: "#2d4e75"
                     },
                     friction:0,
                 });
                 World.add(world, wall);
-                tabWall.push(wall)
+            }
+            if(map[i][j] === 2){
+                let coins = new Coins(x, y);
+                World.add(world, coins.coins)
+                tabCoins.push(coins.coins)
             }
         }
     }
@@ -75,7 +78,8 @@ function drawMap() {
 drawMap();
 
 pacman.movePacman(map);
-
+let a = pacman.checkCollisionPlayerCoins(engine, world, tabCoins)
+console.log(a)
 
 World.add(world, [pacman.player]);
 Render.run(render);

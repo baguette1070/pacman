@@ -1,4 +1,4 @@
-import { Bodies, Body } from 'matter-js';
+import {Bodies, Body, Events, World} from 'matter-js';
 
 export class Pacman {
     constructor(positionXPacman, positionYPacman, radius) {
@@ -6,11 +6,6 @@ export class Pacman {
         this.positionYPacman = positionYPacman;
         this.radius = radius;
 
-        // Variables de contrôle pour chaque direction
-        this.canGoTop = true;
-        this.canGoRight = true;
-        this.canGoLeft = true;
-        this.canGoDown = true;
 
         this.player = Bodies.circle(this.positionXPacman, this.positionYPacman, this.radius, {
             label: "pacmanBox",
@@ -45,87 +40,55 @@ export class Pacman {
         Body.setVelocity(this.player, { x: -velocity, y: this.player.velocity.y });
     }
 
-    // Fonctions pour vérifier les objets à proximité
-    getNextObjectRight(map, cellSize) {
-        return map[parseInt(this.player.position.y / cellSize)][parseInt(this.player.position.x / cellSize) + 1];
+    checkCollisionPlayerCoins(engine, world, tabCoins) {
+        let compteur = 0;
+        Events.on(engine, "collisionStart", (event) => {
+            event.pairs.forEach((collision) => {
+                const { bodyA, bodyB } = collision;
+
+                if ((bodyA.label === 'pacmanBox' && bodyB.label === 'coins') ||
+                    (bodyA.label === 'coins' && bodyB.label === 'pacmanBox')) {
+                    const sound = new Audio("./sounds/tir.ogg")
+                    const coinBody = bodyA.label === 'coins' ? bodyA : bodyB;
+
+                    World.remove(world, coinBody);
+                    compteur++;
+                    console.log(compteur)
+                    const coinIndex = tabCoins.indexOf(coinBody);
+                    if (coinIndex !== -1) {
+                        tabCoins.splice(coinIndex, 1);
+                    }
+                }
+            });
+        });
     }
 
-    getNextObjectDown(map, cellSize) {
-        return map[parseInt(this.player.position.y / cellSize) + 1][parseInt(this.player.position.x / cellSize)];
-    }
-
-    getBeforeObjectUp(map, cellSize) {
-        return map[parseInt(this.player.position.y / cellSize) - 1][parseInt(this.player.position.x / cellSize)];
-    }
-
-    getBeforeObjectLeft(map, cellSize) {
-        return map[parseInt(this.player.position.y / cellSize)][parseInt(this.player.position.x / cellSize) - 1];
-    }
-
-    movePacman(map) {
+    movePacman() {
         document.addEventListener('keydown', (event) => {
-            const cellSize = 30;
-            let interval = null;
-
             switch (event.key) {
                 case 'p':
                     break;
                 case 'z':
-                    if (this.canGoTop) {
-                        interval = setInterval(() => {
-                            if (this.getBeforeObjectUp(map, cellSize) === 1) {
-                                clearInterval(interval);
-                                Body.setVelocity(this.player, { x: 0, y: 0 });
-                                Body.setPosition(this.player, { x: this.player.position.x, y: this.player.position.y - 8 });
-                                this.canGoTop = false;
-                            } else {
-                                console.log("Haut");
-                                this.canGoTop = true
-                                this.moveUp();
-
-                            }
-                        });
-                    }
+                    this.moveUp();
                     break;
                 case 's':
-                    if (this.canGoDown) {
-                        if (this.getNextObjectDown(map, cellSize) === 1) {
-                            Body.setVelocity(this.player, { x: 0, y: 0 });
-                            Body.setPosition(this.player, { x: this.player.position.x, y: this.player.position.y + 1 });
-                            this.canGoDown = false;
-                        } else {
-                            console.log("Bas");
-                            this.canGoDown = true;
-                            this.moveDown();
-                        }
-                    }
+                   this.moveDown()
                     break;
-                case 'q': // Mouvement vers la gauche
-                    if (this.canGoLeft) {
-                        if (this.getBeforeObjectLeft(map, cellSize) === 1) {
-                            Body.setVelocity(this.player, { x: 0, y: 0 });
-                            this.canGoLeft = false;
-                        } else {
-                            console.log("Gauche");
-                            this.canGoLeft = true
-                            this.back();
-                        }
-                    }
+                case 'q':
+                    this.back()
                     break;
                 case 'd':
-                    if (this.canGoRight) {
-                        if (this.getNextObjectRight(map, cellSize) === 1) {
-                            Body.setVelocity(this.player, { x: 0, y: 0 });
-                            this.canGoRight = false;
-                        } else {
-                            console.log("Droite");
-                            this.canGoRight = true
-                            this.forward();
-                        }
-                    }
+                    this.forward()
                     break;
             }
         });
+
+        document.addEventListener('keyup', () => {
+            Body.setVelocity(this.player, {x: 0, y: 0});
+        });
     }
+
+
+
 
 }
