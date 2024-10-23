@@ -1,4 +1,4 @@
-import {Bodies} from "matter-js";
+import {Bodies, World} from "matter-js";
 
 
 export class Ghost {
@@ -10,9 +10,16 @@ export class Ghost {
 
         this.ghostMob = Bodies.circle(this.posX, this.posY, 11, {
             render:{
-                fillStyle:"red"
+                fillStyle:"white"
             }
         })
+
+    }
+
+    spawnMob(world){
+        for (let i = 0; i < 4; i++) {
+            World.add(world, this.ghostMob)
+        }
     }
 
 }

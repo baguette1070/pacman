@@ -20,7 +20,6 @@ export class Pacman {
         });
     }
 
-    // Fonctions de mouvement de Pacman
     forward() {
         const velocity = 5;
         Body.setVelocity(this.player, { x: velocity, y: this.player.velocity.y });
@@ -50,10 +49,10 @@ export class Pacman {
                     const canvas = document.getElementById("gameCanvas")
                     const ctx = canvas.getContext("2d")
 
-                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas
-                    ctx.font = "20px Arial"; // Définir la police et la taille du texte
-                    ctx.fillStyle = "black"; // Couleur du texte
-                    ctx.fillText("Score: " + this.getCoinsCollected(), 20, 30); // Texte, position X, position Y
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.font = "20px Arial";
+                    ctx.fillStyle = "black";
+                    ctx.fillText("Score: " + this.getCoinsCollected(), 20, 30);
 
                     const coinBody = bodyA.label === 'coins' ? bodyA : bodyB;
                     World.remove(world, coinBody);
@@ -90,9 +89,6 @@ export class Pacman {
             }
         });
 
-        document.addEventListener('keyup', () => {
-            Body.setVelocity(this.player, {x: 0, y: 0});
-        });
     }
 
     getCoinsCollected(){
